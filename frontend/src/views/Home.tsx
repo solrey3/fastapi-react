@@ -26,31 +26,38 @@ export const Home: FC = () => {
 
   return (
     <>
-      {!message && !error && (
-        <a className={classes.link} href="#" onClick={() => queryBackend()}>
-          Click to make request to backend
-        </a>
-      )}
-      {message && (
-        <p>
-          <code>{message}</code>
-        </p>
-      )}
-      {error && (
-        <p>
-          Error: <code>{error}</code>
-        </p>
-      )}
-      <a className={classes.link} href="/admin">
-        Admin Dashboard
-      </a>
-      <a className={classes.link} href="/protected">
-        Protected Route
-      </a>
+      
+      
       {isAuthenticated() ? (
-        <a className={classes.link} href="/logout">
-          Logout
-        </a>
+        <>
+          {/* {!message && !error && (
+            <a className={classes.link} href="#" onClick={() => queryBackend()}>
+              Click to make request to backend
+            </a>
+          )}
+          {message && (
+            <p>
+              <code>{message}</code>
+            </p>
+          )}
+          {error && (
+            <p>
+              Error: <code>{error}</code>
+            </p>
+          )} */}
+          <a className={classes.link} href="/admin">
+          Admin Dashboard
+          </a>
+          <a className={classes.link} href="/api/docs">
+          API Docs
+          </a>
+          {/* <a className={classes.link} href="/protected">
+            Protected Route
+          </a> */}
+          <a className={classes.link} href="/logout">
+            Logout
+          </a>
+        </>
       ) : (
         <>
           <a className={classes.link} href="/login">
