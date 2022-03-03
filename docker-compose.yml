@@ -53,6 +53,7 @@ services:
     environment:
       PYTHONPATH: .
       DATABASE_URL: 'postgresql://postgres:password@postgres:5432/postgres'
+      GITHUB_TOKEN: github_token
     depends_on:
       - "postgres"
 
@@ -67,6 +68,9 @@ services:
     environment:
       - NODE_ENV=development
 
+secrets:
+  github_token:
+    file: ghub_token.txt
 
 volumes:
   db-data:
