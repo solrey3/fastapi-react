@@ -48,6 +48,7 @@ services:
     tty: true
     volumes:
       - ./backend:/app/:cached
+      - chaineye-store:/app/chaineye-store 
       - ./.docker/.ipython:/root/.ipython:cached
     environment:
       PYTHONPATH: .
@@ -69,3 +70,4 @@ services:
 
 volumes:
   db-data:
+  chaineye-store:
