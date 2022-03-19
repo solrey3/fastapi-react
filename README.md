@@ -1,4 +1,6 @@
-# fastapi-react-project
+# incyd-web
+
+Full-stack web template for app with fastapi and react frontend using cookiecutter template from https://github.com/Buuntu/fastapi-react
 
 ## Features
 
