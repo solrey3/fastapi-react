@@ -27,7 +27,7 @@ async def db_session_middleware(request: Request, call_next):
     request.state.db.close()
     return response
 
-@app.get("/api/v1")
+@app.get("/api/v1", include_in_schema=False)
 async def root():
     return {"message": "Hello World"}
 
@@ -57,33 +57,33 @@ with open(os.path.join(store.getpath(), 'aave_total_collateral_processed.pkl'), 
 
 
 # HEALTHFACTOR
-@app.get("/api/v1/healthfactor_latest")
+@app.get("/api/v1/healthfactor_latest",dependencies=[Depends(get_current_active_user)])
 async def healthfactor_latest_data(user: str):
     return get_user_most_recent_data(input_dict=aave_health_factor, user=user)
 
-@app.get("/api/v1/healthfactor_historical")
+@app.get("/api/v1/healthfactor_historical",dependencies=[Depends(get_current_active_user)])
 async def healthfactor_historical_data(user: str,
                                        start: Optional[str] = None,
                                        end: Optional[str] = None):
     return get_user_historical_data(aave_health_factor, user, min_time=start, max_time=end)
 
 # TOTAL BORROWED
-@app.get("/api/v1/totalborrow_latest")
+@app.get("/api/v1/totalborrow_latest",dependencies=[Depends(get_current_active_user)])
 async def totalborrow_latest_data(user: str):
     return get_user_most_recent_data(aave_total_borrows, user)
 
-@app.get("/api/v1/totalborrow_historical")
+@app.get("/api/v1/totalborrow_historical",dependencies=[Depends(get_current_active_user)])
 async def totalborrow_historical_data(user: str,
                                        start: Optional[str] = None,
                                        end: Optional[str] = None):
     return get_user_historical_data(aave_total_borrows, user, min_time=start, max_time=end)
 
 # TOTAL COLLATERALIZED
-@app.get("/api/v1/totalcollateral_latest")
+@app.get("/api/v1/totalcollateral_latest",dependencies=[Depends(get_current_active_user)])
 async def totalcollateral_latest_data(user: str):
     return get_user_most_recent_data(aave_total_collateral, user)
 
-@app.get("/api/v1/totalcollateral_historical")
+@app.get("/api/v1/totalcollateral_historical",dependencies=[Depends(get_current_active_user)])
 async def totalcollateral_historical_data(user: str,
                                        start: Optional[str] = None,
                                        end: Optional[str] = None):
@@ -96,8 +96,9 @@ app.include_router(
     prefix="/api/v1",
     tags=["users"],
     dependencies=[Depends(get_current_active_user)],
+    include_in_schema=False,
 )
-app.include_router(auth_router, prefix="/api", tags=["auth"])
+app.include_router(auth_router, prefix="/api", tags=["auth"], include_in_schema=False,)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", reload=True, port=8888)

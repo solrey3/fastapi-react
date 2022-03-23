@@ -1,6 +1,6 @@
 import os
 
-PROJECT_NAME = "fastapi-react-project"
+PROJECT_NAME = "incyd"
 
 SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
 

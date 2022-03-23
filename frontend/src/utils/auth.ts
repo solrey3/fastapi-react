@@ -8,6 +8,14 @@ export const isAuthenticated = () => {
   return permissions === 'user' || permissions === 'admin' ? true : false;
 };
 
+export const isAdministrator = () => {
+  const permissions = localStorage.getItem('permissions');
+  if (!permissions) {
+    return false;
+  }
+  return permissions === 'admin' ? true : false;
+};
+
 /**
  * Login to backend and store JSON web token on success
  *
