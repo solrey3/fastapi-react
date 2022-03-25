@@ -14,7 +14,7 @@ import {
   // Checkbox,
 } from '@material-ui/core';
 
-import { getMessage, getHealthFactorLatest, getTotalBorrowLatest, getTotalCollateralLatest  } from '../utils/api';
+import { getMessage, getHealthFactorLatest, getTotalBorrowLatest, getTotalCollateralLatest, getHealthFactorHistorical, getTotalBorrowHistorical, getTotalCollateralHistorical  } from '../utils/api';
 import { isAuthenticated, isAdministrator } from '../utils/auth';
 
 const useStyles = makeStyles((theme) => ({
@@ -23,6 +23,10 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     textTransform: 'none',
+  },
+  input: {
+    background: 'white',
+    color: 'black',
   },
 }));
 
@@ -52,9 +56,14 @@ export const Home: FC = () => {
   // const [showModalHealthFactorLatest, setShowModalHealthFactorLatest] = useState(false);
   const classes = useStyles();
   const [user, setUser] = useState<string>('');
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
   const [healthFactorLatest, setHealthFactorLatest] = useState<string>('');
   const [totalBorrowLatest, setTotalBorrowLatest] = useState<string>('');
   const [totalCollateralLatest, setTotalCollateralLatest] = useState<string>('');
+  const [healthFactorHistorical, setHealthFactorHistorical] = useState<string>('');
+  const [totalBorrowHistorical, setTotalBorrowHistorical] = useState<string>('');
+  const [totalCollateralHistorical, setTotalCollateralHistorical] = useState<string>('');
 
 
   const queryBackend = async () => {
@@ -108,6 +117,46 @@ export const Home: FC = () => {
   setTotalCollateralLatest(String(valueTotalCollateralLatest));
   };
 
+  const queryHealthFactorHistorical = async (user: string, start: string, end: string) => {
+    setError('');
+    try {
+      const result = await getHealthFactorHistorical(user, start, end);
+      setHealthFactorHistorical(result);
+
+    } catch (err) {
+      setError(String(err));
+    }
+
+  
+  };
+
+  const queryTotalBorrowHistorical = async (user: string, start: string, end: string) => {
+    setError('');
+    try {
+      const result = await getTotalBorrowHistorical(user, start, end);
+      setTotalBorrowHistorical(result);
+
+    } catch (err) {
+      setError(String(err));
+    }
+
+  
+  };
+
+  const queryTotalCollateralHistorical = async (user: string, start: string, end: string) => {
+    setError('');
+    try {
+      const result = await getTotalCollateralHistorical(user, start, end);
+      
+      setTotalCollateralHistorical(result);
+
+    } catch (err) {
+      setError(String(err));
+    }
+
+  };
+
+
   return (
     <>
       <h1>incyd</h1><br></br>
@@ -130,6 +179,9 @@ export const Home: FC = () => {
                 label="User Wallet Address"
                 type="text"
                 value={user}
+                InputProps={{
+                  className: classes.input
+                }}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setUser(e.currentTarget.value)
                 }
@@ -155,6 +207,9 @@ export const Home: FC = () => {
                 label="User Wallet Address"
                 type="text"
                 value={user}
+                InputProps={{
+                  className: classes.input
+                }}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setUser(e.currentTarget.value)
                 }
@@ -180,6 +235,9 @@ export const Home: FC = () => {
                 label="User Wallet Address"
                 type="text"
                 value={user}
+                InputProps={{
+                  className: classes.input
+                }}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setUser(e.currentTarget.value)
                 }
@@ -198,20 +256,175 @@ export const Home: FC = () => {
               <br />
           </div>
           <br></br>
-          <Container>
-            <Button >Healthfactor Historical Data</Button>
-            <GlobalStyle />
-          </Container>
-          <br></br>
-          <Container>
-            <Button >Totalborrow Historical Data</Button>
-            <GlobalStyle />
-          </Container>
-          <br></br>
-          <Container>
-            <Button >Totalcollateral Historical Data</Button>
-            <GlobalStyle />
-          </Container>
+          <div>
+            <h3>Healthfactor Historical Data</h3>
+              <p>Provide a user wallet address, start date, and end date to calculate the health factor.</p>
+              <TextField
+                id="user"
+                label="User Wallet Address"
+                type="text"
+                value={user}
+                InputProps={{
+                  className: classes.input
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setUser(e.currentTarget.value)
+                }
+                fullWidth
+                required
+              />
+              <TextField
+                id="start"
+                label="Start Date (YYYY-MM-DD)"
+                type="text"
+                value={startDate}
+                InputProps={{
+                  className: classes.input
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setStartDate(e.currentTarget.value)
+                }
+                fullWidth
+                required
+              />
+              <TextField
+                id="end"
+                label="End Date (YYYY-MM-DD)"
+                type="text"
+                value={endDate}
+                InputProps={{
+                  className: classes.input
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setEndDate(e.currentTarget.value)
+                }
+                fullWidth
+                required
+              />
+              <br />
+              <Button
+                type="submit"
+                color="primary"
+                onClick={() => queryHealthFactorHistorical(user, startDate, endDate)}
+              >
+                Calculate
+              </Button>
+              <p>The Health Factor is: {healthFactorHistorical}</p>
+              <br />
+          </div>
+          <div>
+            <h3>Totalborrow Histroical Data</h3>
+              <p>Provide a user wallet address, start date, and end date to calculate the total borrow.</p>
+              <TextField
+                id="user"
+                label="User Wallet Address"
+                type="text"
+                value={user}
+                InputProps={{
+                  className: classes.input
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setUser(e.currentTarget.value)
+                }
+                fullWidth
+                required
+              />
+                            <TextField
+                id="start"
+                label="Start Date (YYYY-MM-DD)"
+                type="text"
+                value={startDate}
+                InputProps={{
+                  className: classes.input
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setStartDate(e.currentTarget.value)
+                }
+                fullWidth
+                required
+              />
+              <TextField
+                id="end"
+                label="End Date (YYYY-MM-DD)"
+                type="text"
+                value={endDate}
+                InputProps={{
+                  className: classes.input
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setEndDate(e.currentTarget.value)
+                }
+                fullWidth
+                required
+              />
+
+              <br />
+              <Button
+                type="submit"
+                color="primary"
+                onClick={() => queryTotalBorrowHistorical(user, startDate, endDate)}
+              >
+                Calculate
+              </Button>
+              <p>The Total Borrow is: {totalBorrowHistorical}</p>
+              <br />
+          </div>
+          <div>
+            <h3>Totalcollateral Historical Data</h3>
+              <p>Provide a user wallet address, start date, and end date to calculate the total collateral.</p>
+              <TextField
+                id="user"
+                label="User Wallet Address"
+                type="text"
+                value={user}
+                InputProps={{
+                  className: classes.input
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setUser(e.currentTarget.value)
+                }
+                fullWidth
+                required
+              />
+              <TextField
+                id="start"
+                label="Start Date (YYYY-MM-DD)"
+                type="text"
+                value={startDate}
+                InputProps={{
+                  className: classes.input
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setStartDate(e.currentTarget.value)
+                }
+                fullWidth
+                required
+              />
+              <TextField
+                id="end"
+                label="End Date (YYYY-MM-DD)"
+                type="text"
+                value={endDate}
+                InputProps={{
+                  className: classes.input
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setEndDate(e.currentTarget.value)
+                }
+                fullWidth
+                required
+              />
+              <br />
+              <Button
+                type="submit"
+                color="primary"
+                onClick={() => queryTotalCollateralHistorical(user, startDate, endDate)}
+              >
+                Calculate
+              </Button>
+              <p>The Total Collateral is: {totalCollateralHistorical}</p>
+              <br />
+          </div>
           <br></br>
           {!message && !error && (
             
